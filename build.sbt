@@ -38,3 +38,5 @@ libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.11" withSo
 libraryDependencies += "com.typesafe.akka" % "akka-remote_2.11" % "2.3.11" withSources()
 
 libraryDependencies += "com.zaxxer" % "HikariCP-java6" % "2.3.8"
+
+libraryDependencies += "com.ning" % "async-http-client" % "1.9.29" withSources()
