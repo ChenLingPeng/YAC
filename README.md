@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ChenLingPeng/YAC.svg?branch=master)](https://travis-ci.org/ChenLingPeng/YAC)
+
 # YAC (Yet Another Crawler)
 
 YAC (spelled as **Yet Another Crawler**), is an extended edition for crawler [here](https://github.com/ChenLingPeng/arachnez) written by me. My plan is to add distributed feature first and some other functions. 
