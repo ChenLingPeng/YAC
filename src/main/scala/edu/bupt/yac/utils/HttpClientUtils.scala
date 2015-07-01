@@ -1,4 +1,4 @@
-package edu.bupt.utils
+package edu.bupt.yac.utils
 
 import java.io.{IOException, InterruptedIOException}
 import java.net.UnknownHostException

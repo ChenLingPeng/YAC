@@ -1,6 +1,6 @@
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.Executors
 
-import edu.bupt.utils.HttpClientUtils
+import edu.bupt.yac.utils.HttpClientUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
