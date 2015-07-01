@@ -14,6 +14,7 @@ YAC (spelled as **Yet Another Crawler**), is an extended edition for crawler [he
 6. Offer persist API with HDFS & Mysql
 7. Job customization with config
 8. Distributed
+9. Bandwidth limit
 
 ## Features Completed
 
