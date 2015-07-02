@@ -27,3 +27,4 @@ YAC (spelled as **Yet Another Crawler**), is an extended edition for crawler [he
 3. [HttpClient](http://hc.apache.org/httpcomponents-client-4.5.x/index.html): the real worker to get web pages
 4. [Slick](http://slick.typesafe.com/): database library for scala
 5. [Spray](http://spray.io/): for RESTful HTTP server
+6. [protobuf](https://github.com/google/protobuf)：used from message communite between nodes

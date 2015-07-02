@@ -40,3 +40,5 @@ libraryDependencies += "com.typesafe.akka" % "akka-remote_2.11" % "2.3.11" withS
 libraryDependencies += "com.zaxxer" % "HikariCP-java6" % "2.3.8"
 
 libraryDependencies += "com.ning" % "async-http-client" % "1.9.29" withSources()
+
+libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
