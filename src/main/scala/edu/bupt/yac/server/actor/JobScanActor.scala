@@ -5,9 +5,10 @@ import java.net.{URL, URLClassLoader}
 
 import akka.actor.{Props, Actor}
 import edu.bupt.yac.api.YacClientJob
-import edu.bupt.yac.commons.{JobAdd, JobScan}
+import edu.bupt.yac.commons.{JobDelete, JobAdd, JobScan}
 import edu.bupt.yac.config.{Constants, JobConfigParser}
 import edu.bupt.yac.server.YacSystem
+import org.apache.commons.io.monitor.{FileAlterationListenerAdaptor, FileAlterationMonitor, FileAlterationObserver}
 import org.apache.log4j.Logger
 
 /**
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger
 /**
  * Job扫描相关，包括对目录的定期扫描，添加，删除等
  */
-class JobScanActor extends Actor {
+private class JobScanActor extends Actor {
   val log = Logger.getLogger(this.getClass)
   log.info("JobScanActor start")
 
@@ -26,51 +27,27 @@ class JobScanActor extends Actor {
   val basePath = System.getProperty("user.dir")
   log.info(s"base dir: $basePath")
 
-  import scala.concurrent.duration._
-  import YacSystem.exec
-
-  context.system.scheduler.schedule(3 seconds, 5 minutes, self, JobScan)
-
   override def receive: Receive = {
-    case JobScan =>
+    case JobScan(jobDir) =>
       log.info("start scan")
-      scan().foreach(JobControllerActor() ! JobAdd(_))
+      val valid = check(jobDir)
+      if(valid) JobControllerActor() ! JobAdd(jobDir)
       // TODO: if the fold is modify or delete, should send JobDelete signal
     log.info("end scana")
+    case JobDelete(jobDir) =>
+      JobControllerActor() ! JobDelete(jobDir)
   }
 
   // 扫描job需要文件: .jar yacjob.properties seeds.txt
-  private def scan() = {
-    val baseDir = new File(basePath)
-    if (baseDir.exists() && baseDir.isDirectory) {
-      val jobsValid = baseDir.listFiles().filter(file =>
-        file.isDirectory
-        && file.listFiles().length == 3
-        && file.listFiles().exists(file => file.getName == Constants.seedFileName)
-        && file.listFiles().exists(file => file.getName == Constants.propertiesFileName)
-        && file.listFiles().exists(file => file.getName.endsWith(".jar"))
-      )
-      jobsValid.flatMap{jobDir =>
-        val lastModify = jobDir.listFiles().map(_.lastModified()).max
-        val oldModify = jobs(jobDir.getName)
-        if(lastModify>oldModify){
-          jobs.put(jobDir.getName, lastModify)
-          val valid = check(jobDir)
-          if(valid)
-            Some(jobDir)
-          else
-            None
-        } else {
-          None
-        }
-      }
-
-    } else {
-      Array.empty[File]
-    }
+  private def check(jobDir: File) = {
+      jobDir.listFiles().length==3 &&
+        jobDir.listFiles().exists(_.getName == Constants.seedFileName) &&
+        jobDir.listFiles().exists(_.getName == Constants.propertiesFileName) &&
+        jobDir.listFiles().exists(_.getName.endsWith(".jar")) &&
+        checkRaw(jobDir)
   }
 
-  private def check(jobDir: File) = {
+  private def checkRaw(jobDir: File) = {
     val conf = new JobConfigParser(jobDir.getPath+"/"+Constants.propertiesFileName)
     conf.check && {
       try {
@@ -90,6 +67,41 @@ class JobScanActor extends Actor {
       }
     }
   }
+
+  private def monitorDir() = {
+    val pollingInterval: Long = 5*1000
+    val jobsDir = new File(basePath+"/jobs")
+    if(!jobsDir.exists()) jobsDir.mkdir()
+    val observer = new FileAlterationObserver(jobsDir)
+    val monitor = new FileAlterationMonitor(pollingInterval)
+    val listener = new FileAlterationListenerAdaptor(){
+      override def onDirectoryChange(directory: File): Unit = {
+        log.info(directory.getName+" change")
+        self ! JobScan(directory)
+      }
+
+      override def onFileChange(file: File): Unit = {
+        log.info(file.getName+" change")
+        self ! JobScan(file.getParentFile)
+      }
+
+      override def onDirectoryDelete(directory: File): Unit = {
+        log.info(directory.getName+" delete")
+        self ! JobDelete(directory.getName)
+      }
+
+      override def onDirectoryCreate(directory: File): Unit = {
+        log.info(directory.getName+" create")
+        self ! JobScan(directory)
+      }
+
+    }
+    observer.addListener(listener)
+    monitor.addObserver(observer)
+    monitor.start()
+  }
+
+  monitorDir()
 }
 
 object JobScanActor {
@@ -99,3 +111,4 @@ object JobScanActor {
 
   def apply() = jobScanActor
 }
+
