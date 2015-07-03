@@ -28,7 +28,7 @@ class JobConfigParser(filepath: String) {
   private def getField(field: String) = confMap(field)
 
   import JobConfigParser._
-  def getJobName = getField(fieldJobName)
+//  def getJobName = getField(fieldJobName)
   def getClassPath = getField(fieldClassPath)
   def isProxy = getField(fieldProxy).getOrElse("false") == "true"
   def getThreadNum = getField(fieldThreadNum).getOrElse("1").toInt
@@ -52,14 +52,15 @@ class JobConfigParser(filepath: String) {
 
   def check = {
     // 如果repeat，一定需要设置delay字段
-    getJobName.isDefined && getClassPath.isDefined && (!isRepeat || delayTime.nonEmpty)
+    getClassPath.isDefined && (!isRepeat || delayTime.nonEmpty)
   }
 
 
 }
 
 object JobConfigParser{
-  val fieldJobName = "jobname"
+  // force jobname equals to directory name
+//  val fieldJobName = "jobname"
   val fieldClassPath = "classpath"
   // 可能已经不需要
   val fieldThreadNum = "threadnumber"
@@ -68,4 +69,8 @@ object JobConfigParser{
   val delay = "delay"
   val repeat = "repeat"
   val charset = "charset"
+
+  def apply(filepath: String) = {
+    new JobConfigParser(filepath)
+  }
 }

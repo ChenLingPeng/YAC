@@ -48,7 +48,7 @@ private class JobScanActor extends Actor {
   }
 
   private def checkRaw(jobDir: File) = {
-    val conf = new JobConfigParser(jobDir.getPath+"/"+Constants.propertiesFileName)
+    val conf = JobConfigParser(jobDir.getPath+"/"+Constants.propertiesFileName)
     conf.check && {
       try {
         val jarFile = jobDir.listFiles(new FilenameFilter {
