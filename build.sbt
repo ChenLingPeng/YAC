@@ -42,3 +42,5 @@ libraryDependencies += "com.zaxxer" % "HikariCP-java6" % "2.3.8"
 libraryDependencies += "com.ning" % "async-http-client" % "1.9.29" withSources()
 
 libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
+
+libraryDependencies += "org.apache.commons" % "commons-compress" % "1.9"
