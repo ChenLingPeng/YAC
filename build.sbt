@@ -43,4 +43,4 @@ libraryDependencies += "com.ning" % "async-http-client" % "1.9.29" withSources()
 
 libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
 
-libraryDependencies += "org.apache.commons" % "commons-compress" % "1.9"
+libraryDependencies += "net.lingala.zip4j" % "zip4j" % "1.3.2"

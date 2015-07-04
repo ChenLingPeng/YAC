@@ -7,14 +7,13 @@ import edu.bupt.yac.utils.CompressUtils
  */
 object CompressTest extends App {
   def compress() = {
-//    val c = GzipComp
-    CompressUtils.createZip("/Users/chenlingpeng/workspace/scala/untitled","/Users/chenlingpeng/workspace/t.zip")
+    CompressUtils.zipFolder(new File("/Users/chenlingpeng/workspace/scala/untitled"), "/Users/chenlingpeng/workspace/t.zip")
   }
-
-//  compress()
 
   def decompress() = {
-    CompressUtils.extractZip(new File("/Users/chenlingpeng/workspace/t.zip"), "/Users/chenlingpeng/workspace/")
+    CompressUtils.unzipFolder("/Users/chenlingpeng/workspace/t.zip","/Users/chenlingpeng/workspace/")
   }
-  decompress()
+//  compress()
+ decompress()
+
 }
