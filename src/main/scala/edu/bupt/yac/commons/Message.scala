@@ -22,3 +22,8 @@ case class YacURL(url: String, jobName: String)
 case class YacURLResult(url: String, seed: Boolean, content: String, code: Int, retry: Int)
 // 持久化命令
 case object Persist
+
+
+case object Register // 节点注册
+case object Louout // 节点注销
+case class MachineInfo(cpu: Int, memoryMByte: Long) // work节点信息

@@ -44,3 +44,13 @@ libraryDependencies += "com.ning" % "async-http-client" % "1.9.29" withSources()
 libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
 
 libraryDependencies += "net.lingala.zip4j" % "zip4j" % "1.3.2"
+
+libraryDependencies += "io.spray" % "spray-can_2.11" % "1.3.3"
+
+libraryDependencies += "io.spray" % "spray-util_2.11" % "1.3.3"
+
+libraryDependencies += "io.spray" % "spray-routing_2.11" % "1.3.3"
+
+libraryDependencies += "io.spray" % "spray-caching_2.11" % "1.3.3"
+
+libraryDependencies += "io.spray" % "spray-client_2.11" % "1.3.3"

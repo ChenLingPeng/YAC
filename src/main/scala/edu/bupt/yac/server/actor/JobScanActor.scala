@@ -107,7 +107,7 @@ private class JobScanActor extends Actor {
 object JobScanActor {
   private def props = Props[JobScanActor]
 
-  lazy val jobScanActor = YacSystem().actorOf(props)
+  lazy val jobScanActor = YacSystem().actorOf(props,"jobscanner")
 
   def apply() = jobScanActor
 }

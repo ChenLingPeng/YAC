@@ -3,10 +3,11 @@ package edu.bupt.yac.server.actor
 import java.io.File
 
 import akka.actor.{Terminated, Props, Actor}
-import edu.bupt.yac.commons.{JobDelete, JobAdd}
+import edu.bupt.yac.commons.{Register, JobDelete, JobAdd}
 import edu.bupt.yac.server.YacSystem
 import org.apache.log4j.Logger
 import scala.collection.mutable
+import scala.io.Source
 
 /**
  * User: chenlingpeng 
@@ -46,6 +47,13 @@ class JobControllerActor extends Actor{
       jobsWaitingForRestart.remove(jobName).foreach{jobDir =>
         context.watch(context.actorOf(JobActor.props(jobDir), jobDir.getName))
       }
+    case str: String =>
+      println(s"$str from ${sender().path.address}")
+      sender() ! "send back!"
+    case iter: List[_] =>
+      iter.foreach(println)
+    case Register =>
+      log.info(s"register from ${sender().path.address}")
 
   }
 }
@@ -53,7 +61,7 @@ class JobControllerActor extends Actor{
 object JobControllerActor {
   private def props = Props[JobControllerActor]
 
-  lazy val jobControllerActor = YacSystem().actorOf(props)
+  lazy val jobControllerActor = YacSystem().actorOf(props, "jobcontroller")
 
   def apply() = jobControllerActor
 }

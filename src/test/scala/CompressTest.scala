@@ -13,7 +13,7 @@ object CompressTest extends App {
   def decompress() = {
     CompressUtils.unzipFolder("/Users/chenlingpeng/workspace/t.zip","/Users/chenlingpeng/workspace/")
   }
-//  compress()
- decompress()
+  compress()
+// decompress()
 
 }
