@@ -12,7 +12,7 @@ case object Tick
 
 case class NodeInfo(threads: Int, bandwidth: Double)
 
-case class HeartBeat(ip: String, port: Int, info: Some[NodeInfo])
+case class HeartBeat(ip: String, port: Int, info: Option[NodeInfo])
 
 case class JobAdd(jobDir: File)
 case class JobDelete(jobDir: String)
@@ -24,6 +24,6 @@ case class YacURLResult(url: String, seed: Boolean, content: String, code: Int, 
 case object Persist
 
 
-case object Register // 节点注册
+case object Register // 节点注册, ignore
 case object Louout // 节点注销
 case class MachineInfo(cpu: Int, memoryMByte: Long) // work节点信息

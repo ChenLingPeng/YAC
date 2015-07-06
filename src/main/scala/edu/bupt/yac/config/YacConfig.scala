@@ -27,10 +27,11 @@ object YacConfig {
     }
   }
 
-  private val config = ConfigFactory.load()
+  val config = ConfigFactory.load()
   val serverip = config.getOptionalString("yac.server.ip").getOrElse("localhost")
   val serverport = config.getOptionalInt("yac.server.port").getOrElse(1113)
   val clientport = config.getOptionalInt("yac.client.port").getOrElse(0)
   val clientthreads = config.getOptionalInt("yac.client.threads").getOrElse(Int.MaxValue)
+  val actorSystemName = config.getOptionalString("yac.server.system.name").getOrElse("YACSystem")
 
 }
