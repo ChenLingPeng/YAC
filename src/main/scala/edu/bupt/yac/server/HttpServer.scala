@@ -32,7 +32,7 @@ class HttpServerActor extends Actor with YacHttpService{
 }
 
 trait YacHttpService extends HttpService{
-  val zipTmpDir = _
+  val zipTmpDir: String = "./ziptmpfile"
   implicit def executionContext: ExecutionContextExecutor = actorRefFactory.dispatcher
   val yacRoute = {
     get {

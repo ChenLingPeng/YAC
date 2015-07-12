@@ -16,7 +16,8 @@ class YacFileDownloadActor extends Actor{
   import context.dispatcher
   private val pipeline = sendReceive
 
-  val unfold: String = _
+  val unfold: String = "local/jobs"
+  val zipfold: String = "local/ziptmp"
 
   override def receive: Receive = {
     case fileName: String =>
@@ -24,11 +25,11 @@ class YacFileDownloadActor extends Actor{
       response.onComplete{
         case Success(s) =>
           val content = s.entity.data.toByteArray
-          val out = new FileOutputStream(new File(s"$unfold/$fileName"))
+          val out = new FileOutputStream(new File(s"$zipfold/$fileName"))
           out.write(content)
           out.flush()
           out.close()
-          CompressUtils.unzipFolder(s"$unfold/$fileName",unfold)
+          CompressUtils.unzipFolder(s"$zipfold/$fileName",unfold)
         case Failure(f) =>
           println(f)
       }

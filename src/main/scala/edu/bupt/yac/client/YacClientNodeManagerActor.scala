@@ -26,6 +26,7 @@ class YacClientNodeManagerActor extends Actor{
       context.watch(ref)
       context.become(heartbeat(ref))
       context.setReceiveTimeout(Duration.Undefined)
+      import context.dispatcher
       context.system.scheduler.schedule(5 seconds, 5 seconds, self, Tick)
     case ActorIdentity(`identifyId`, None) =>
       log.error("server may not started...")
