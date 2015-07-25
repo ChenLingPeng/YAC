@@ -12,7 +12,7 @@ object YacClientSystem extends App {
 
   def apply() = clientSystem
 
-
+//  YacFileDownloadActor() ! "tmp.zip"
 
 }
 

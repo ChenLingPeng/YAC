@@ -16,8 +16,9 @@ import scala.io.Source
 
 /**
  * 负责Job的创建，删除，定时启动等
+ * TODO: 加入筛选功能，忙时拒绝或者延迟
  */
-class JobControllerActor extends Actor{
+private class JobControllerActor extends Actor{
   val log = Logger.getLogger(this.getClass)
   log.info("JobControllerActor start")
 

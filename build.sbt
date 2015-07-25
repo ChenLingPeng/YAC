@@ -49,7 +49,7 @@ libraryDependencies += "io.spray" % "spray-can_2.11" % "1.3.3"
 
 libraryDependencies += "io.spray" % "spray-util_2.11" % "1.3.3"
 
-libraryDependencies += "io.spray" % "spray-routing_2.11" % "1.3.3"
+libraryDependencies += "io.spray" % "spray-routing_2.11" % "1.3.3" withSources()
 
 libraryDependencies += "io.spray" % "spray-caching_2.11" % "1.3.3"
 

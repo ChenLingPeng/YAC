@@ -11,7 +11,7 @@ import akka.actor.{Props, Actor}
 /**
  * 与用户提交的job一一对应，负责处理与worker节点的交互
  */
-class JobActor(jobDir: File) extends Actor{
+private class JobActor(jobDir: File) extends Actor{
   override def receive: Receive = ???
 
   @throws[Exception](classOf[Exception])

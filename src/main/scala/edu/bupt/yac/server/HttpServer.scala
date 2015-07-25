@@ -14,7 +14,6 @@ import scala.concurrent.ExecutionContextExecutor
  * Created by chenlingpeng on 15/7/5.
  */
 
-
 object HttpServer {
   val log = Logger.getLogger(this.getClass)
   def serverStart() = {
@@ -32,7 +31,8 @@ class HttpServerActor extends Actor with YacHttpService{
 }
 
 trait YacHttpService extends HttpService{
-  val zipTmpDir: String = "./ziptmpfile"
+  import HttpServer.log
+  val zipTmpDir: String = "server/ziptmpfile"
   implicit def executionContext: ExecutionContextExecutor = actorRefFactory.dispatcher
   val yacRoute = {
     get {
@@ -44,7 +44,12 @@ trait YacHttpService extends HttpService{
       } ~
       path("file" / Segment) {
         fileName =>
+          log.info(fileName+" commanded!!!")
           getFromFile(s"$zipTmpDir/$fileName")
+      } ~
+      path("info") {
+        // TODO: restful api
+        complete("some server info")
       }
     }
   }

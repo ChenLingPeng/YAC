@@ -2,6 +2,7 @@ package edu.bupt.yac.client
 
 import java.io.{FileOutputStream, File}
 
+import edu.bupt.yac.config.YacConfig
 import edu.bupt.yac.utils.CompressUtils
 
 import scala.util.{Success, Failure}
@@ -11,21 +12,23 @@ import spray.client.pipelining._
 /**
  * Created by chenlingpeng on 15/7/5.
  */
-class YacFileDownloadActor extends Actor{
+private class YacFileDownloadActor extends Actor{
 
   import context.dispatcher
   private val pipeline = sendReceive
 
   val unfold: String = "local/jobs"
-  val zipfold: String = "local/ziptmp"
+  val zipfold: String = "local/ziptmpfile"
+  new File(zipfold).mkdirs()
 
   override def receive: Receive = {
     case fileName: String =>
-      val response = pipeline(Get(s"http://localhost:1113/file/$fileName"))
+      val response = pipeline(Get(s"http://${YacConfig.serverip}:${YacConfig.serverport}/file/$fileName"))
       response.onComplete{
         case Success(s) =>
           val content = s.entity.data.toByteArray
-          val out = new FileOutputStream(new File(s"$zipfold/$fileName"))
+          println("size: "+content.length)
+          val out = new FileOutputStream(new File(zipfold, fileName))
           out.write(content)
           out.flush()
           out.close()
