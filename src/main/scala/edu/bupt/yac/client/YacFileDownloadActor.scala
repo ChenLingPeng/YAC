@@ -4,6 +4,8 @@ import java.io.{FileOutputStream, File}
 
 import edu.bupt.yac.config.YacConfig
 import edu.bupt.yac.utils.CompressUtils
+import org.apache.commons.codec.binary.Base64
+import spray.http.HttpHeaders.RawHeader
 
 import scala.util.{Success, Failure}
 import akka.actor.{Props, Actor}
@@ -23,7 +25,7 @@ private class YacFileDownloadActor extends Actor{
 
   override def receive: Receive = {
     case fileName: String =>
-      val response = pipeline(Get(s"http://${YacConfig.serverip}:${YacConfig.serverport}/file/$fileName"))
+      val response = pipeline(Get(s"http://${YacConfig.serverip}:${YacConfig.serverport}/file/$fileName") ~> addHeader(YacFileDownloadActor.authHeader))
       response.onComplete{
         case Success(s) =>
           val content = s.entity.data.toByteArray
@@ -40,6 +42,11 @@ private class YacFileDownloadActor extends Actor{
 }
 
 object YacFileDownloadActor {
+  val authName = "YAC"
+  val authPasswd = "github.com/ChenLingpeng/YAC"
+  val authHeader = {
+    RawHeader("Authorization", "Basic " + new String(Base64.encodeBase64((authName + ":" + authPasswd).getBytes)))
+  }
   def props = Props[YacFileDownloadActor]
   lazy val fileDownloadActor = YacClientSystem().actorOf(props,"downloadactor")
   def apply() = fileDownloadActor
