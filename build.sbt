@@ -54,3 +54,9 @@ libraryDependencies += "io.spray" % "spray-routing_2.11" % "1.3.3" withSources()
 libraryDependencies += "io.spray" % "spray-caching_2.11" % "1.3.3"
 
 libraryDependencies += "io.spray" % "spray-client_2.11" % "1.3.3"
+
+libraryDependencies += "org.apache.curator" % "curator-framework" % "2.9.0"
+
+libraryDependencies += "org.apache.curator" % "curator-recipes" % "2.9.0"
+
+libraryDependencies += "com.twitter" % "chill_2.11" % "0.7.1"

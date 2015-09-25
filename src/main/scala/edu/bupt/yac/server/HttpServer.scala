@@ -3,6 +3,7 @@ package edu.bupt.yac.server
 import YacSystem._
 import akka.io.IO
 import edu.bupt.yac.client.YacFileDownloadActor
+import edu.bupt.yac.commons.{RevokedLeadership, ElectedLeader}
 import org.apache.commons.codec.binary.Base64
 
 import org.apache.log4j.Logger
@@ -20,18 +21,30 @@ import scala.concurrent.ExecutionContextExecutor
 
 object HttpServer {
   val log = Logger.getLogger(this.getClass)
-  def serverStart() = {
-    val service = YacSystem().actorOf(Props[HttpServerActor], "httpserver")
-    IO(Http) ! Http.Bind(service, "localhost", port = 1113)
-    log.info("http server started")
-  }
-
+  def props() = Props[HttpServerActor]
 }
 
 class HttpServerActor extends Actor with YacHttpService{
+  import HttpServer.log
   override def actorRefFactory = context
   implicit val settings = RoutingSettings.default(context)
-  def receive = runRoute(yacRoute)
+  def receive = notService
+
+  def notService: Actor.Receive = {
+    case ElectedLeader =>
+      runRoute(yacRoute)
+    case msg =>
+      log.info(s"$msg message not handled because not a leader here...")
+  }
+
+  def onService: Actor.Receive = {
+    runRoute(yacRoute) orElse listenForShutdownService
+  }
+
+  def listenForShutdownService: Actor.Receive = {
+    case RevokedLeadership =>
+      context.become(notService)
+  }
 }
 
 trait YacHttpService extends HttpService{
@@ -67,8 +80,10 @@ trait YacHttpService extends HttpService{
                   }
                 case _ => None
               }
-            }.getOrElse(respondWithHeader(RawHeader("WWW-Authenticate","Basic realm=\"Only use for Yac Client\""))(complete(StatusCodes.Unauthorized -> "not authorized")))
-
+            }.getOrElse(
+                respondWithHeader(RawHeader("WWW-Authenticate","Basic realm=\"Only use for Yac Client\""))
+                  (complete(StatusCodes.Unauthorized -> "not authorized"))
+              )
           }
       }  ~
       path("info") {

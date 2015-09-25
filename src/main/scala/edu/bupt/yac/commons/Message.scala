@@ -27,3 +27,7 @@ case object Persist
 case object Register // 节点注册, ignore
 case object Louout // 节点注销
 case class MachineInfo(cpu: Int, memoryMByte: Long) // work节点信息
+
+sealed trait LeaderElect
+case object ElectedLeader extends LeaderElect
+case object RevokedLeadership extends LeaderElect

@@ -17,6 +17,11 @@ My plan is to add distributed feature first and some other functions.
 8. Distributed
 9. Bandwidth limit
 
+## Advance Feature
+
+1. Master Node recovery
+2. Master Node High Availability
+
 ## Features Completed
 
 1. None
@@ -28,4 +33,4 @@ My plan is to add distributed feature first and some other functions.
 3. [HttpClient](http://hc.apache.org/httpcomponents-client-4.5.x/index.html): the real worker to get web pages
 4. [Slick](http://slick.typesafe.com/): database library for scala
 5. [Spray](http://spray.io/): for RESTful HTTP server
-6. [protobuf](https://github.com/google/protobuf)：used from message communite between nodes
+6. [Protobuf](https://github.com/google/protobuf)：used from message communite between nodes
