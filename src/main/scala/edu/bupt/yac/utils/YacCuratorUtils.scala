@@ -19,7 +19,7 @@ object YacCuratorUtils {
   private val MAX_RECONNECT_ATTEMPTS = 3
 
   def newClient(conf: YacConf) = {
-    val ZK_URL = conf.get(ZK_URL_CONF_KEY, "angel0:2181,angel0:2182,angel0:2183")
+    val ZK_URL = conf.get(ZK_URL_CONF_KEY, "localhost:2181,localhost:2182,localhost:2183")
     val zookeeper = CuratorFrameworkFactory.newClient(ZK_URL,
       ZK_SESSION_TIMEOUT_MILLIS, ZK_CONNECTION_TIMEOUT_MILLIS,
       new ExponentialBackoffRetry(RETRY_WAIT_MILLIS, MAX_RECONNECT_ATTEMPTS))

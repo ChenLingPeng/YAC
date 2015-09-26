@@ -8,7 +8,6 @@ import scala.reflect.ClassTag
  * Created by chenlingpeng on 15/9/21.
  */
 
-
 abstract class PersistedEngine {
   def persist(name: String, obj: Object)
 
@@ -33,7 +32,7 @@ abstract class PersistedEngine {
   def close() = {}
 }
 
-class BlockHolePersistedEngine extends PersistedEngine {
+class BlackHolePersistedEngine extends PersistedEngine {
   override def persist(name: String, obj: Object) = {}
   override def unpersist(name: String) = {}
   override def close() = {}

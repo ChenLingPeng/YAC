@@ -1,7 +1,8 @@
 package edu.bupt.yac.server
 
+import java.io.{FileOutputStream, File}
+
 import YacSystem._
-import akka.io.IO
 import edu.bupt.yac.client.YacFileDownloadActor
 import edu.bupt.yac.commons.{RevokedLeadership, ElectedLeader}
 import org.apache.commons.codec.binary.Base64
@@ -9,9 +10,8 @@ import org.apache.commons.codec.binary.Base64
 import org.apache.log4j.Logger
 import akka.actor._
 import spray.http.HttpHeaders.RawHeader
-import spray.http.StatusCodes
-import spray.routing.{RoutingSettings, HttpService}
-import spray.can.Http
+import spray.http.{MultipartFormData, MediaTypes, StatusCodes}
+import spray.routing._
 import spray.routing.directives.CachingDirectives._
 import scala.concurrent.ExecutionContextExecutor
 
@@ -32,7 +32,7 @@ class HttpServerActor extends Actor with YacHttpService{
 
   def notService: Actor.Receive = {
     case ElectedLeader =>
-      runRoute(yacRoute)
+      context.become(onService)
     case msg =>
       log.info(s"$msg message not handled because not a leader here...")
   }
@@ -50,11 +50,13 @@ class HttpServerActor extends Actor with YacHttpService{
 trait YacHttpService extends HttpService{
   import HttpServer.log
   val zipTmpDir: String = "server/ziptmpfile"
+  val zipUpload: String = "server/upload"
+  new File(zipTmpDir).mkdirs()
+  new File(zipUpload).mkdirs()
   implicit def executionContext: ExecutionContextExecutor = actorRefFactory.dispatcher
 
   def auth(rawStr: String) {
     val decode = new String(Base64.decodeBase64(rawStr.getBytes))
-
   }
 
   val yacRoute = {
@@ -89,6 +91,22 @@ trait YacHttpService extends HttpService{
       path("info") {
         // TODO: restful api
         complete("some server info")
+      }
+    } ~ post {
+      path("file") {
+        respondWithMediaType(MediaTypes.`application/json`) {
+          entity(as[MultipartFormData]) { formData =>
+            // curl -F filename=@xxx.zip http://localhost:1113
+            val body = formData.get("filename").get
+            val fileName = body.filename.get
+            val data = body.entity.data.toByteArray
+            val file = new File(zipUpload, fileName)
+            val writer = new FileOutputStream(file)
+            writer.write(data)
+            writer.close()
+            complete("""{"status":0}""")
+          }
+        }
       }
     }
   }

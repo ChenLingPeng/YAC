@@ -16,7 +16,7 @@ abstract class RecoveryModeFactory(conf: YacConf, serializer: Serializer) {
 class FileSystemRecoveryModeFactory(conf: YacConf, serializer: Serializer) extends RecoveryModeFactory(conf, serializer) {
   val log = Logger.getLogger(classOf[FileSystemRecoveryModeFactory])
 
-  val RECOVERY_DIR = conf.get("yac.deploy.master.recoveryDirectory", "")
+  val RECOVERY_DIR = conf.get("yac.deploy.master.recoveryDirectory", ".")
 
   override def createPersistenceEngine(): PersistedEngine = {
     log.info("Persisting recovery state to directory " + RECOVERY_DIR)
