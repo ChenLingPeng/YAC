@@ -14,6 +14,8 @@ case class NodeInfo(threads: Int, bandwidth: Double)
 
 case class HeartBeat(ip: String, port: Int, info: Option[NodeInfo])
 
+case class Register(ip: String, port: Int, mac: String, timestamp: String)
+
 case class JobAdd(jobDir: File)
 case class JobDelete(jobDir: String)
 
@@ -23,9 +25,6 @@ case class YacURLResult(url: String, seed: Boolean, content: String, code: Int, 
 // 持久化命令
 case object Persist
 
-
-case object Register // 节点注册, ignore
-case object Louout // 节点注销
 case class MachineInfo(cpu: Int, memoryMByte: Long) // work节点信息
 
 sealed trait LeaderElect

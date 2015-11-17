@@ -1,6 +1,6 @@
 package edu.bupt.yac.server
 
-import java.util.concurrent.Executors
+//import java.util.concurrent.Executors
 
 import akka.actor.{Props, Actor, ActorRef, ActorSystem}
 import akka.io.IO
@@ -12,7 +12,7 @@ import edu.bupt.yac.server.actor.{JobScanActor, JobControllerActor}
 import org.apache.log4j.Logger
 import spray.can.Http
 
-import scala.concurrent.ExecutionContext
+//import scala.concurrent.ExecutionContext
 
 /**
  * User: chenlingpeng 
@@ -21,9 +21,9 @@ import scala.concurrent.ExecutionContext
 object YacSystem {
   val log = Logger.getLogger(classOf[YacSystem])
   lazy implicit val system = ActorSystem(YacConfig.actorSystemName,YacConfig.config.getConfig("yac.server.SeverSys"))
-  lazy implicit val exec = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
+//  lazy implicit val exec = ExecutionContext.fromExecutor(Executors.newCachedThreadPool())
   def props() = Props[YacSystem]
-
+  sys.addShutdownHook(system.shutdown())
   var controllerActor: ActorRef = _
   var httpService: ActorRef = _
   var jobScanActor: ActorRef = _

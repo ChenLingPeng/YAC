@@ -70,7 +70,7 @@ trait YacHttpService extends HttpService{
         (path("file" / Segment) & optionalHeaderValueByName("Authorization") ) {
           (fileName, header) =>
           {
-            println(header.getOrElse("no header"))
+            println(header.getOrElse("no 'Authorization' header"))
             header.flatMap{
               _.split(" ").toList match {
                 case "Basic" :: name_pass_encoded :: Nil =>
@@ -91,7 +91,20 @@ trait YacHttpService extends HttpService{
       path("info") {
         // TODO: restful api
         complete("some server info")
-      }
+      } ~
+        (path("register") & headerValueByName("Yac-Client-Timestamp") & clientIP & headerValueByName("Yac-Mac-Address") & headerValueByName("Yac-Client-Port")) {
+          (clientId, clientIp, macAddress, port) =>
+            respondWithMediaType(MediaTypes.`application/json`) {
+//              entity(as[some-type]){some => ctx =>
+              val ip = clientIp.toOption.get.getHostAddress
+              val hostname = clientIp.toOption.get.getHostName
+              println(s"client ip: $ip, hostname: $hostname, mac address: $macAddress")
+              val clientPort = port.toInt
+              complete("")
+            }
+
+//            handleWith()
+        }
     } ~ post {
       path("file") {
         respondWithMediaType(MediaTypes.`application/json`) {

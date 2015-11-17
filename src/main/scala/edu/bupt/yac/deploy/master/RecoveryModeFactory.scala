@@ -37,5 +37,8 @@ class ZookeeperRecoveryModeFactory(conf: YacConf, serializer: Serializer) extend
     new ZookeeperPersistenceEngine(conf, serializer)
   }
 
-  override def createLeaderElectionAgent(master: LeaderElectable): LeaderElectionAgent = ???
+  override def createLeaderElectionAgent(master: LeaderElectable): LeaderElectionAgent = {
+    log.info("Leader election using zookeeper")
+    new ZookeeperLeaderElectionAgent(master, conf)
+  }
 }
